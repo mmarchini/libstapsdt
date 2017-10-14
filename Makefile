@@ -18,6 +18,7 @@ install:
 	mkdir -p $(DESTDIR)$(PREFIX)/lib
 	mkdir -p $(DESTDIR)$(PREFIX)/include
 	cp out/$(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
+	ln -s $(DESTDIR)$(PREFIX)/lib/$(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SOLINK)
 	cp src/libstapsdt.h $(DESTDIR)$(PREFIX)/include/
 
 deb-pkg-setup:
@@ -29,6 +30,7 @@ deb-pkg-setup:
 
 uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/lib/$(SONAME)
+	rm -f $(DESTDIR)$(PREFIX)/lib/$(SOLINK)
 	rm -f $(DESTDIR)$(PREFIX)/include/libstapsdt.h
 
 build/lib/libstapsdt-x86_64.o: src/asm/libstapsdt-x86_64.s
