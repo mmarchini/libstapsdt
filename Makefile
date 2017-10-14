@@ -10,7 +10,7 @@ OBJECTS = $(patsubst src/%.c, build/lib/%.o, $(wildcard src/*.c))
 HEADERS = $(wildcard src/*.h)
 
 SOLINK = libstapsdt.so
-SONAME = libstapsdt.so.$(VERSION)
+SONAME = libstapsdt.so.0
 
 all: out/libstapsdt.a out/$(SONAME)
 
@@ -20,13 +20,6 @@ install:
 	cp out/$(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
 	ln -s $(DESTDIR)$(PREFIX)/lib/$(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SOLINK)
 	cp src/libstapsdt.h $(DESTDIR)$(PREFIX)/include/
-
-deb-pkg-setup:
-	mkdir -p dist/libstapsdt-$(VERSION)/;
-	git archive HEAD | gzip > dist/libstapsdt-$(VERSION).tar.gz;
-	tar xvzf dist/libstapsdt-$(VERSION).tar.gz -C dist/libstapsdt-$(VERSION)/;
-	cd dist/libstapsdt-$(VERSION); dh_make -l -c mit -y -f ../libstapsdt-$(VERSION).tar.gz;
-	rm -rf dist/libstapsdt-$(VERSION)/debian/*.ex  dist/libstapsdt-$(VERSION)/debian/*.EX  dist/libstapsdt-$(VERSION)/debian/README.*
 
 uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/lib/$(SONAME)
@@ -72,4 +65,12 @@ docs:
 docs-server:
 	cd docs/_build/html; python3 -m http.server;
 
-.PHONY: all clear lint format build-tests docs install uninstall
+deb-pkg-setup:
+	mkdir -p dist/libstapsdt-$(VERSION)/;
+	git archive HEAD | gzip > dist/libstapsdt-$(VERSION).tar.gz;
+	tar xvzf dist/libstapsdt-$(VERSION).tar.gz -C dist/libstapsdt-$(VERSION)/;
+	cd dist/libstapsdt-$(VERSION); dh_make -l -c mit -y -f ../libstapsdt-$(VERSION).tar.gz;
+	rm -rf dist/libstapsdt-$(VERSION)/debian/*.ex  dist/libstapsdt-$(VERSION)/debian/*.EX  dist/libstapsdt-$(VERSION)/debian/README.*
+
+
+.PHONY: all clear lint format build-tests docs install uninstall deb-pkg-setup
